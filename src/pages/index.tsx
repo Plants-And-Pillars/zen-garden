@@ -1,13 +1,8 @@
 import Head from "next/head";
-import Board from "@/components/Board";
-import DraggableItemList from "@/components/DraggableItemList";
 
-import usePositionStore from "@/store/usePositionStore";
 import { Flex } from "@chakra-ui/react";
 
 export default function Home() {
-  const position = usePositionStore((state) => state.position);
-
   return (
     <>
       <Head>
@@ -18,8 +13,7 @@ export default function Home() {
       </Head>
       <main>
         <Flex direction="row" justify="space-around" align="center">
-          <Board position={position} />
-          <DraggableItemList />
+          
         </Flex>
       </main>
     </>
