@@ -1,7 +1,8 @@
 import Head from "next/head";
 
 import { Stage } from "@pixi/react";
-import DraggableSprite from "@/components/DraggableSprite";
+import DraggableSprites from "@/components/DraggableSprites";
+import ListOfSprites from "@/components/ListOfSprites";
 
 import { Flex } from "@chakra-ui/react";
 
@@ -16,8 +17,11 @@ export default function Home() {
       </Head>
       <main>
         <Flex direction="row" justify="space-around" align="center">
-          <Stage options={{ backgroundColor: 0x1099bb }}>
-            <DraggableSprite />
+          <Stage options={{ backgroundColor: "#e0d9c9" }}>
+            <DraggableSprites />
+          </Stage>
+          <Stage width={250} options={{ backgroundColor: "#1a1a1a" }}>
+            <ListOfSprites />
           </Stage>
         </Flex>
       </main>
