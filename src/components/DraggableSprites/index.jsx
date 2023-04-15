@@ -12,7 +12,8 @@ const DraggableSprites = () => {
         <DraggableSprite
           x={sprite.x}
           y={sprite.y}
-          key={sprite.id}
+          key={sprite.tokenId}
+          image={sprite.image}
         />
       ))}
     </Container>

@@ -1,9 +1,21 @@
 import { create } from 'zustand';
 
 const useSpriteStore = create((set) => ({
-    sprites: [{ x: 400, y: 300, id: 0 }],
-    addSprite: (sprite) => set((state) => ({ sprites: [...state.sprites, sprite] })),
-    // removeSprite: (sprite) => set((state) => ({ sprites: state.sprites.filter((s) => s !== sprite) })),
+    sprites: [],
+    
+    fetchedNFTs: null,
+    setFetchedNFTs: (fetchedNFTs) => set(() => ({ fetchedNFTs })),
+
+    moveAFetchedNFTToSprites: (tokenId) => set((state) => {
+        const newFetchedNFTs = state.fetchedNFTs.filter((nft) => nft.tokenId !== tokenId);
+        const fetchedNFT = state.fetchedNFTs.find((nft) => nft.tokenId === tokenId);
+        return {
+            fetchedNFTs: newFetchedNFTs, sprites: [...state.sprites, {
+                x: 50, y: 50, image: fetchedNFT.media[0].thumbnail, tokenId
+            }]
+        };
+    }
+    ),
 }))
 
 export default useSpriteStore;

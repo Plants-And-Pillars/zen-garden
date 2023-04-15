@@ -1,10 +1,10 @@
 import { Sprite } from "@pixi/react";
 
-const CustomSprite = ({ x, y, onClick }) => {
+const CustomSprite = ({ x, y, image, onClick }) => {
   return (
     <Sprite
-      image="https://s3-us-west-2.amazonaws.com/s.cdpn.io/693612/IaUrttj.png"
-      scale={2}
+      image={image}
+      scale={0.5}
       x={x}
       y={y}
       interactive={true}
