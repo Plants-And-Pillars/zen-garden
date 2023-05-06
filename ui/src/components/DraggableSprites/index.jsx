@@ -1,22 +1,27 @@
-import { Container } from "@pixi/react";
-import useSpriteStore from "../../store/useSpriteStore";
+import { Stage } from "@pixi/react";
 
-import DraggableSprite from "./DraggableSprite";
+import useSpriteStore from "@/store/useSpriteStore";
+import DraggableSpritesContent from "./DraggableSpritesContent";
+
+import { Button, Flex } from "@chakra-ui/react";
 
 const DraggableSprites = () => {
-  const sprites = useSpriteStore((state) => state.sprites);
+  const forestPixiApp = useSpriteStore((state) => state.forestPixiApp);
+
+  const captureForestState = () => {
+    const forestDataURL = forestPixiApp.view.toDataURL();
+    console.log("forestDataURL", forestDataURL);
+  };
 
   return (
-    <Container>
-      {sprites.map((sprite) => (
-        <DraggableSprite
-          x={sprite.x}
-          y={sprite.y}
-          key={sprite.tokenId}
-          image={sprite.image}
-        />
-      ))}
-    </Container>
+    <Flex direction="column">
+      <Stage options={{ backgroundColor: "#e0d9c9" }}>
+        <DraggableSpritesContent />
+      </Stage>
+      <Button isDisabled={!forestPixiApp} onClick={captureForestState}>
+        Capture
+      </Button>
+    </Flex>
   );
 };
 

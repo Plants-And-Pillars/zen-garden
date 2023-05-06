@@ -2,10 +2,12 @@ import { create } from 'zustand';
 
 const useSpriteStore = create((set) => ({
     sprites: [],
-    
+
+    forestPixiApp: undefined,
+    setForestPixiApp: (forestPixiApp) => set(() => ({ forestPixiApp })),
+
     fetchedNFTs: null,
     setFetchedNFTs: (fetchedNFTs) => set(() => ({ fetchedNFTs })),
-
     moveAFetchedNFTToSprites: (tokenId) => set((state) => {
         const newFetchedNFTs = state.fetchedNFTs.filter((nft) => nft.tokenId !== tokenId);
         const fetchedNFT = state.fetchedNFTs.find((nft) => nft.tokenId === tokenId);

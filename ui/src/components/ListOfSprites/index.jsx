@@ -4,7 +4,7 @@ import { Stage } from "@pixi/react";
 import { useAccount } from "wagmi";
 import { Network, Alchemy } from "alchemy-sdk";
 const settings = {
-  apiKey: process.env.ALCHEMY_API_KEY,
+  apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY,
   network: Network.MATIC_MUMBAI,
 };
 
@@ -29,6 +29,8 @@ const ListOfSprites = () => {
 
   useEffect(() => {
     (async () => {
+      console.log("settings", settings);
+      console.log("address", address);
       const alchemy = new Alchemy(settings);
       const nfts = await alchemy.nft.getNftsForOwner(address);
       console.log("nfts", nfts);
