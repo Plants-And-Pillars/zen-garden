@@ -29,12 +29,15 @@ const ListOfSprites = () => {
 
   useEffect(() => {
     (async () => {
-      console.log("settings", settings);
-      console.log("address", address);
+      // console.log("settings", settings);
+      // console.log("address", address);
       const alchemy = new Alchemy(settings);
       const nfts = await alchemy.nft.getNftsForOwner(address);
-      console.log("nfts", nfts);
-      setFetchedNFTs(nfts.ownedNfts);
+ 
+      if(!nfts || !nfts.ownedNfts) return;
+      
+      // fitler out nfts that are not from the openstore
+      setFetchedNFTs(nfts.ownedNfts.filter(ownedNFT => ownedNFT.contract.symbol === "OPENSTORE"));
     })();
   }, [address, setFetchedNFTs]);
 

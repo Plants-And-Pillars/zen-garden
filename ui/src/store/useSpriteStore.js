@@ -2,9 +2,13 @@ import { create } from 'zustand';
 
 const useSpriteStore = create((set) => ({
     sprites: [],
+    setSprites: (sprites) => set(() => ({ sprites })),
 
     forestPixiApp: undefined,
     setForestPixiApp: (forestPixiApp) => set(() => ({ forestPixiApp })),
+
+    forestTokenId: undefined,
+    setForestTokenId: (forestTokenId) => set(() => ({ forestTokenId })),
 
     fetchedNFTs: null,
     setFetchedNFTs: (fetchedNFTs) => set(() => ({ fetchedNFTs })),
