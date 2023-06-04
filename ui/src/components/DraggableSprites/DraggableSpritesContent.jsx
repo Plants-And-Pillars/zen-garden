@@ -19,6 +19,7 @@ const DraggableSpritesContent = () => {
     <Container>
       {sprites.map((sprite) => (
         <DraggableSprite
+          tokenId={sprite.tokenId}
           x={sprite.x}
           y={sprite.y}
           key={sprite.tokenId}

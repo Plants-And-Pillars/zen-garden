@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useAccount, useContract, useSigner } from "wagmi";
 import { Stage } from "@pixi/react";
+import { create } from "ipfs-http-client";
 
 import useSpriteStore from "@/store/useSpriteStore";
 import DraggableSpritesContent from "./DraggableSpritesContent";
@@ -9,10 +10,21 @@ import forestContractABI from "@/contracts/abi/forestContractABI.json";
 
 import { Button, Flex, useToast } from "@chakra-ui/react";
 
+// type ForestTokenURIType = {
+//   sprites: {
+//     x: number,
+//     y: number,
+//     tokenId: string,
+//   },
+//   ipfsUploadInfo: {
+//     cid: string,
+//     path: string,
+//   },
+// };
+
 const DraggableSprites = () => {
   const toast = useToast();
 
-  const { account } = useAccount();
   const { data: signerData } = useSigner();
 
   const forestContract = useContract({
@@ -21,23 +33,60 @@ const DraggableSprites = () => {
     signerOrProvider: signerData,
   });
 
-  const { forestPixiApp, forestTokenId, setForestTokenId, setSprites } = useSpriteStore(
-    (state) => ({
-      forestPixiApp: state.forestPixiApp,
-      forestTokenId: state.forestTokenId,
-      setForestTokenId: state.setForestTokenId,
-      setSprites: state.setSprites,
-    })
-  );
+  const {
+    forestPixiApp,
+    forestTokenId,
+    setForestTokenId,
+    moveAFetchedNFTToSprites,
+    sprites,
+  } = useSpriteStore((state) => ({
+    forestPixiApp: state.forestPixiApp,
+    forestTokenId: state.forestTokenId,
+    setForestTokenId: state.setForestTokenId,
+    moveAFetchedNFTToSprites: state.moveAFetchedNFTToSprites,
+    sprites: state.sprites,
+  }));
 
-  const captureForestState = () => {
-    const forestDataURL = forestPixiApp.view.toDataURL();
-    console.log("forestDataURL", forestDataURL);
+  const captureForestState = async () => {
+    const forestSnapshotURL = forestPixiApp.view.toDataURL();
+    console.log("forestSnapshotURL", forestSnapshotURL);
 
-    // 1. upload the dataURL to IPFS
-    // 2. construct the metadata object (IPFS hash, sprites position data)
-    //    { sprites: [], ipfsHash: "" }
-    // 3. update the tokenURI with the metadata object, use tokenID from the global state
+    // upload the dataURL to IPFS
+    const client = await create({
+      url: `https://zengarden-f89e.eks-india.settlemint.com/${process.env.NEXT_PUBLIC_IPFS_API_URL}/api/v0/`,
+    });
+    const addedData = await client.add({
+      path: `forestsnapshot-${forestTokenId}.png`,
+      content: forestSnapshotURL,
+    });
+    console.log("cid", addedData.cid.toString());
+
+    // create the URI object
+    const newForestTokenURI = {
+      sprites: sprites.map((sprite) => ({
+        x: sprite.x,
+        y: sprite.y,
+        tokenId: sprite.tokenId,
+      })),
+      ipfsUploadInfo: {
+        cid: addedData.cid.toString(),
+        path: addedData.path,
+      },
+    };
+
+    forestContract
+      .modifyTokenURI(forestTokenId, JSON.stringify(newForestTokenURI))
+      .then((tx) => tx.wait())
+      .then((tx) => {
+        console.log("tx", tx);
+        toast({
+          title: "Token URI updated",
+          description: "Token URI updated sucessfully!",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+      });
   };
 
   useEffect(() => {
@@ -47,6 +96,7 @@ const DraggableSprites = () => {
       .getTokenId()
       .then((tx) => {
         const tokenId = tx.toNumber();
+        console.log("TOKEN ID", tokenId);
         toast({
           title: "Token Id fetched",
           description: "Token Id fetched sucessfully!",
@@ -54,7 +104,9 @@ const DraggableSprites = () => {
           duration: 5000,
           isClosable: true,
         });
-        setForestTokenId(tokenId);
+
+        // storing the token id (as a string) in the global state
+        setForestTokenId("" + tokenId);
       })
       .catch((error) => {
         console.log("error", error);
@@ -68,7 +120,13 @@ const DraggableSprites = () => {
             isClosable: true,
           });
 
-          const initURI = { sprites: [], ipfsHash: "" }; // TBD
+          const initURI = {
+            sprites: [],
+            ipfsUploadInfo: {
+              cid: "",
+              path: "",
+            },
+          };
           forestContract
             .safeMint(JSON.stringify(initURI))
             .then((tx) => {
@@ -82,6 +140,9 @@ const DraggableSprites = () => {
                   isClosable: true,
                 });
                 console.log("safeMint", tx);
+
+                // reload and fetch the tokenID
+                window.location.reload();
               });
             })
             .catch((error) => {
@@ -92,6 +153,7 @@ const DraggableSprites = () => {
   }, [signerData, forestContract]);
 
   useEffect(() => {
+    console.log("forestTokenId", forestTokenId);
     if (!forestTokenId) return;
 
     forestContract
@@ -106,12 +168,19 @@ const DraggableSprites = () => {
           duration: 5000,
           isClosable: true,
         });
-        setSprites(tokenURI.sprites); // TBD
+
+        tokenURI.sprites.forEach((sprite) => {
+          moveAFetchedNFTToSprites(sprite.tokenId, sprite.x, sprite.y);
+        });
       })
       .catch((error) => {
         console.log("error", error);
       });
   }, [forestTokenId]);
+
+  useEffect(() => {
+    console.log("sprites", sprites);
+  }, [sprites]);
 
   return (
     <Flex direction="column">

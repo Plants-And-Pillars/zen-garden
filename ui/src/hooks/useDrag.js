@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import * as PIXI from 'pixi.js';
+import useSpriteStore from "@/store/useSpriteStore";
 
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
 
-const useDrag = ({ x, y }) => {
+const useDrag = ({ tokenId, x, y }) => {
+  const { updateSpritePosition } = useSpriteStore((state) => ({
+    updateSpritePosition: state.updateSpritePosition
+  }));
+
   const sprite = React.useRef();
   const [isDragging, setIsDragging] = React.useState(false);
   const [position, setPosition] = React.useState({ x, y });
@@ -15,6 +20,14 @@ const useDrag = ({ x, y }) => {
       setPosition(e.data.getLocalPosition(sprite.current.parent));
     }
   }, [isDragging, setPosition]);
+
+  useEffect(() => {
+    if (isDragging) return;
+
+    // update position in store
+    console.log('updateSpritePosition', tokenId, position.x, position.y);
+    updateSpritePosition(tokenId, position.x, position.y);
+  }, [isDragging]);
 
   return {
     ref: sprite,
