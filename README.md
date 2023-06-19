@@ -1,5 +1,4 @@
 # Zen Garden
-## Chainlink Spring Hackathon
 
 ## Contracts
 
