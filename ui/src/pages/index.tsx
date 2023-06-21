@@ -15,9 +15,14 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        <Flex margin="3% 0" justify="space-evenly">
-          <Heading>Zen Garden</Heading>
+      <main className="bg-img-container">
+        <Flex
+          padding="1.5% 0"
+          justify="space-evenly"
+          marginBottom={"2%"}
+          bgColor={"whiteAlpha.600"}
+        >
+          <Heading color={"green.900"}>Zen Garden</Heading>
           <ConnectButton />
         </Flex>
         <Flex direction="row" justify="space-around" align="center">
