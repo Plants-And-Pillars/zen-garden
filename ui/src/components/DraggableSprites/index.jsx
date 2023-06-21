@@ -183,7 +183,7 @@ const DraggableSprites = () => {
   }, [sprites]);
 
   return (
-    <Flex direction="column" align="center" margin="0 0 0 300px">
+    <Flex direction="column" align="center" pos="absolute" left="250px" bottom="10px">
       <Box>
         <Stage width={600} height={300}  options={{ backgroundColor: "#725A10", backgroundAlpha: 0.7 }}>
           <DraggableSpritesContent />

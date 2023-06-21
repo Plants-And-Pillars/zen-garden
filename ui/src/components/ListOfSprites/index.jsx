@@ -71,7 +71,7 @@ const ListOfSprites = () => {
   }, [address, signerData, treeContract, setFetchedNFTs]);
 
   return (
-    <Flex margin="0 25px 40px 0">
+    <Flex pos="absolute" right="15px" bottom="60px">
       {fetchedNFTs !== null ? (
         <Stage
           width={300}
