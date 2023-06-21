@@ -24,12 +24,12 @@ const ListOfSprites = () => {
   useContractEvent({
     address: process.env.NEXT_PUBLIC_TREE_CONTRACT_ADDRESS,
     abi: treeContractABI,
-    eventName: 'RequestFulfilled',
+    eventName: "RequestFulfilled",
     listener(node, label, owner) {
       console.log(node, label, owner);
       fetchTreeNFTs();
     },
-  })
+  });
 
   const moveAFetchedNFTToSprites = useSpriteStore(
     (state) => state.moveAFetchedNFTToSprites
@@ -71,13 +71,17 @@ const ListOfSprites = () => {
   }, [address, signerData, treeContract, setFetchedNFTs]);
 
   return (
-    <Flex padding={10} bgColor="#725A10">
+    <Flex margin="0 25px 40px 0">
       {fetchedNFTs !== null ? (
-        <Stage width={400} options={{ backgroundColor: "#725A10"}}>
+        <Stage
+          width={300}
+          height={600}
+          options={{ backgroundColor: "#e0d9c9", backgroundAlpha: 0.8 }}
+        >
           {fetchedNFTs.map((fetchedNFT, index) => (
             <CustomSprite
               key={fetchedNFT.tokenId}
-              x={index % 2 * 220}
+              x={(index % 2) * 220}
               y={Math.floor(index / 2) * 240}
               image={fetchedNFT.imageURL}
               onClick={() => handleClick(fetchedNFT)}

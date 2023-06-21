@@ -110,5 +110,8 @@ a {
 }
 
 .bg-img-container{
+  height: 110vh;
   background-image: url("/garden-bg.png");
+  background-size: auto;
+  background-repeat: no-repeat;
 }

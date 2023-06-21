@@ -8,7 +8,7 @@ import DraggableSpritesContent from "./DraggableSpritesContent";
 
 import forestContractABI from "@/contracts/abi/forest.json";
 
-import { Button, Flex, useToast } from "@chakra-ui/react";
+import { Box, Button, Flex, useToast } from "@chakra-ui/react";
 
 // type ForestTokenURIType = {
 //   sprites: {
@@ -183,12 +183,14 @@ const DraggableSprites = () => {
   }, [sprites]);
 
   return (
-    <Flex direction="column">
-      <Stage options={{ backgroundColor: "#e0d9c9" }}>
-        <DraggableSpritesContent />
-      </Stage>
-      <Button isDisabled={!forestPixiApp} onClick={captureForestState}>
-        Capture
+    <Flex direction="column" align="center" margin="0 0 0 300px">
+      <Box>
+        <Stage width={600} height={300}  options={{ backgroundColor: "#725A10", backgroundAlpha: 0.7 }}>
+          <DraggableSpritesContent />
+        </Stage>
+      </Box>
+      <Button color={"green.900"} marginY={5} width="fit-content" isDisabled={!forestPixiApp} onClick={captureForestState}>
+        Save
       </Button>
     </Flex>
   );
